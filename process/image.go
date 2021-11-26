@@ -16,6 +16,7 @@ func isOk(image image.Image) (bool, [3]int) {
 		for y := 0; y < dim.Dy(); y++ {
 			pix := image.At(x, y)
 			_, _, _, a := pix.RGBA()
+			a = a >> 8
 			if a < 50 {
 				clearCount++
 			}
@@ -36,7 +37,7 @@ func isOk(image image.Image) (bool, [3]int) {
 		for y := 0; y < dim.Dy(); y++ {
 			pix := image.At(x, y)
 			rV, gV, bV, a := pix.RGBA()
-			rV, gV, bV = rV>>8, gV>>8, bV>>8 // convert to out of 255
+			rV, gV, bV, a = rV>>8, gV>>8, bV>>8, a>>8 // convert to out of 255
 			if a > 50 {
 				r += int(rV)
 				g += int(gV)
@@ -49,7 +50,7 @@ func isOk(image image.Image) (bool, [3]int) {
 	b = b / cnt
 	g = g / cnt
 	color := colorful.Color{R: float64(r) / float64(255), G: float64(g) / float64(255), B: float64(b) / float64(255)}
-	h, s, v := color.Hsv()
+	lV, aV, bV := color.Lab()
 
-	return true, [3]int{int(h), int(s * 255), int(v * 255)}
+	return true, [3]int{int(lV * 255), int(aV * 255), int(bV * 255)}
 }

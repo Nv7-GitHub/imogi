@@ -14,7 +14,7 @@ import (
 
 type Emoji struct {
 	Text  string
-	Color [3]int // HSV
+	Color [3]int // LAB
 }
 
 func handle(err error) {
