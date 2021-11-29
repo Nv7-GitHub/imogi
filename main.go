@@ -3,11 +3,13 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"image/png"
+	"image"
 	"os"
 	"strings"
 
 	_ "embed"
+	_ "image/jpeg"
+	_ "image/png"
 
 	"github.com/nfnt/resize"
 )
@@ -32,36 +34,44 @@ func main() {
 	err := json.Unmarshal([]byte(emojiData), &emojis)
 	handle(err)
 
-	f, err := os.Open("image.png")
+	inp := GetInput("Name of image: ")
+	f, err := os.Open(inp)
 	handle(err)
 	defer f.Close()
 
-	img, err := png.Decode(f)
+	img, _, err := image.Decode(f)
 	handle(err)
 
-	// Resize to 10x10
-	img = resize.Resize(25, 25, img, resize.NearestNeighbor)
+	width := GetInputInt("Max Width (0 for unlimited, recommend 14-30): ")
+	height := GetInputInt("Max Height (0 for unlimited, usually leave at 0): ")
+	img = resize.Resize(uint(width), uint(height), img, resize.NearestNeighbor)
 
-	// Save resized
+	/*// Save resized
 	outF, err := os.Create("out.png")
 	handle(err)
 	defer outF.Close()
 	err = png.Encode(outF, img)
-	handle(err)
+	handle(err)*/
 
 	// Convert
 	out := convertImg(img)
 
 	// Print with line breaks for discord
+	fmt.Println("Copy the following chunks into messages in discord, one by one. Press enter to go to the next chunk.")
+	reader.ReadLine()
 	cnt := 0
 	for _, line := range strings.Split(out, "\n") {
 		length := len([]byte(line))
-		if cnt+length > 1000 {
+		if cnt+length > 500 {
 			fmt.Println()
 			fmt.Println()
+			reader.ReadLine()
 			cnt = 0
 		}
 		cnt += length
 		fmt.Println(line)
 	}
+	fmt.Println()
+	fmt.Println()
+	fmt.Println("Finished!")
 }
