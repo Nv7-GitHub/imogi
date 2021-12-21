@@ -17,6 +17,8 @@ import (
 //go:embed emojis.json
 var emojiData string
 
+const charsPerMsg = 500
+
 func handle(err error) {
 	if err != nil {
 		panic(err)
@@ -56,20 +58,30 @@ func main() {
 	// Convert
 	out := convertImg(img)
 
-	// Print with line breaks for discord
-	fmt.Println("Copy the following chunks into messages in discord, one by one. Press enter to go to the next chunk.")
-	reader.ReadLine()
+	// Get msgs
+	msgs := make([]string, 0)
 	cnt := 0
+	txt := ""
 	for _, line := range strings.Split(out, "\n") {
 		length := len([]byte(line))
-		if cnt+length > 500 {
-			fmt.Println()
-			fmt.Println()
-			reader.ReadLine()
+		if cnt+length > charsPerMsg {
+			msgs = append(msgs, txt)
+			txt = ""
 			cnt = 0
 		}
 		cnt += length
-		fmt.Println(line)
+		txt += line
+		txt += "\n"
+	}
+
+	// Print with line breaks for discord
+	fmt.Printf("There are %d chunks. Copy the following chunks into messages in discord, one by one. Press enter to go to the next chunk.\n", len(msgs))
+	for _, msg := range msgs {
+		reader.ReadLine()
+
+		fmt.Println(msg)
+		fmt.Println()
+		fmt.Println()
 	}
 	fmt.Println()
 	fmt.Println()
