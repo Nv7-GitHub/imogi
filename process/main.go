@@ -1,5 +1,7 @@
 package main
 
+// Writes emojis.json in parent directory
+
 import (
 	"encoding/json"
 	"fmt"
@@ -9,13 +11,9 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Nv7-Github/imogi"
 	"github.com/schollz/progressbar/v3"
 )
-
-type Emoji struct {
-	Text  string
-	Color [3]int // LAB
-}
 
 func handle(err error) {
 	if err != nil {
@@ -27,7 +25,7 @@ func main() {
 	emojis, err := os.ReadDir("emojis")
 	handle(err)
 
-	out := make([]Emoji, 0)
+	out := make([]imogi.Emoji, 0)
 	bar := progressbar.New(len(emojis))
 
 	for _, file := range emojis {
@@ -42,7 +40,7 @@ func main() {
 		if ok {
 			ext := filepath.Ext(file.Name())
 			name := file.Name()[:len(file.Name())-len(ext)]
-			emoji := Emoji{
+			emoji := imogi.Emoji{
 				Text:  filenameToString(name),
 				Color: color,
 			}

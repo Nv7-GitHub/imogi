@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"image"
 	"os"
@@ -11,11 +10,9 @@ import (
 	_ "image/jpeg"
 	_ "image/png"
 
+	"github.com/Nv7-Github/imogi"
 	"github.com/nfnt/resize"
 )
-
-//go:embed emojis.json
-var emojiData string
 
 const charsPerMsg = 500
 
@@ -25,17 +22,7 @@ func handle(err error) {
 	}
 }
 
-type Emoji struct {
-	Text  string
-	Color [3]int // LAB
-}
-
-var emojis []Emoji
-
 func main() {
-	err := json.Unmarshal([]byte(emojiData), &emojis)
-	handle(err)
-
 	inp := GetInput("Name of image: ")
 	f, err := os.Open(inp)
 	handle(err)
@@ -56,7 +43,7 @@ func main() {
 	handle(err)*/
 
 	// Convert
-	out := convertImg(img)
+	out := imogi.ConvertImg(img)
 
 	// Get msgs
 	msgs := make([]string, 0)

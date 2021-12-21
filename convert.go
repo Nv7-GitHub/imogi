@@ -1,4 +1,4 @@
-package main
+package imogi
 
 import (
 	"image"
@@ -7,7 +7,7 @@ import (
 	"github.com/lucasb-eyer/go-colorful"
 )
 
-func convertImg(img image.Image) string {
+func ConvertImg(img image.Image) string {
 	out := &strings.Builder{}
 	bounds := img.Bounds()
 	for y := 0; y < bounds.Dy(); y++ {
