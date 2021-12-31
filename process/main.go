@@ -30,7 +30,7 @@ func main() {
 
 	for _, file := range emojis {
 		// Read img
-		f, err := os.Open("emojis/" + file.Name())
+		f, err := os.Open("../emojis/" + file.Name())
 		handle(err)
 		img, err := png.Decode(f)
 		handle(err)
