@@ -22,7 +22,7 @@ func handle(err error) {
 }
 
 func main() {
-	emojis, err := os.ReadDir("emojis")
+	emojis, err := os.ReadDir("../emojis")
 	handle(err)
 
 	out := make([]imogi.Emoji, 0)
