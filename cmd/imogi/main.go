@@ -14,7 +14,7 @@ import (
 	"github.com/nfnt/resize"
 )
 
-const charsPerMsg = 500
+const charsPerMsg = 2000
 
 func handle(err error) {
 	if err != nil {
@@ -50,7 +50,19 @@ func main() {
 	cnt := 0
 	txt := ""
 	for _, line := range strings.Split(out, "\n") {
-		length := len([]byte(line))
+		// Calculate size
+		length := 0
+		for _, r := range line {
+			shortcut, exists := imogi.GetEmojiShortcut(r)
+			if exists {
+				length += len(shortcut) + 2 // (2 for the two ":"s)
+			} else {
+				length += 10 // arbitrary number
+				fmt.Println("Doesnt exist", string(r))
+			}
+		}
+
+		// Split
 		if cnt+length > charsPerMsg {
 			msgs = append(msgs, txt)
 			txt = ""
