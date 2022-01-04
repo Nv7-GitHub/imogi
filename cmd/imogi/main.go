@@ -14,7 +14,7 @@ import (
 	"github.com/nfnt/resize"
 )
 
-const charsPerMsg = 2000
+const charsPerMsg = 199 // 199 emojis allowed per msg
 
 func handle(err error) {
 	if err != nil {
@@ -51,16 +51,7 @@ func main() {
 	txt := ""
 	for _, line := range strings.Split(out, "\n") {
 		// Calculate size
-		length := 0
-		for _, r := range line {
-			shortcut, exists := imogi.GetEmojiShortcut(r)
-			if exists {
-				length += len(shortcut) + 2 // (2 for the two ":"s)
-			} else {
-				length += 10 // arbitrary number
-				fmt.Println("Doesnt exist", string(r))
-			}
-		}
+		length := len([]rune(line))
 
 		// Split
 		if cnt+length > charsPerMsg {
