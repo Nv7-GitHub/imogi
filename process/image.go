@@ -1,15 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"image"
 
 	"github.com/lucasb-eyer/go-colorful"
 )
 
-const min = 0.9 // Minimum percentage of solid colors
-const maxHSVDiff = 400
-const maxLabDiff = 0.8
+const min = 0.8        // Minimum percentage of solid colors
+const maxHSVDiff = 800 // Maximum difference in HSV
+const maxLabDiff = 1   // Maximum difference in LAB
 
 func isOk(image image.Image) (bool, [3]int) {
 	dim := image.Bounds()
@@ -76,7 +75,6 @@ func isOk(image image.Image) (bool, [3]int) {
 	}
 
 	// check contrast
-	fmt.Println(highestHSV-lowestHSV, highestLAB-lowestLAB)
 	if highestHSV-lowestHSV > maxHSVDiff || highestLAB-lowestLAB > maxLabDiff {
 		return false, [3]int{}
 	}
